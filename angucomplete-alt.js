@@ -83,7 +83,8 @@ angular.module('angucomplete-alt', [])
                 inputChanged: '=',
                 autoMatch: '@',
                 focusOut: '&',
-                focusIn: '&'
+                focusIn: '&',
+                wildCardOnFocusWithEmptyValue: '@'
             },
             templateUrl: function (element, attrs) {
                 return attrs.templateUrl || TEMPLATE_URL;
@@ -555,6 +556,9 @@ angular.module('angucomplete-alt', [])
                     }
                     if (scope.results && scope.results.length > 0) {
                         scope.showDropdown = true;
+                    } else if (scope.wildCardOnFocusWithEmptyValue) {
+                        getRemoteResults('');
+                        scope.showDropdown = true;
                     }
                 };
 
@@ -594,7 +598,7 @@ angular.module('angucomplete-alt', [])
                     // Restore original values
                     if (scope.matchClass) {
                         result.title = extractTitle(result.originalObject);
-                        result.description = extractDescription(result.originalObject);
+                        result.description = extractValue(result.originalObject, scope.descriptionField);
                     }
 
                     if (scope.clearSelected) {
